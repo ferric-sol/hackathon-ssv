@@ -23,7 +23,7 @@ contract StakingPool is Ownable, ReentrancyGuard {
     uint256 beaconRewards;
     uint256 executionRewards;
 
-    mapping(address => uint256) private userStake;
+    mapping(address => uint256) public userStake;
 
     event UserStaked(address user_address, uint256 amount);
     event PubKeyDeposited(bytes pubkey);

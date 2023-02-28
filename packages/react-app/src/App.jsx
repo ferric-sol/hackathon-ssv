@@ -257,7 +257,7 @@ function App(props) {
   console.log("💵 threshold:", threshold);
 
   // ** keep track of a variable from the contract in the local React state:
-  const balanceStaked = useContractReader(readContracts, "StakingPool", "balances", [address]);
+  const balanceStaked = useContractReader(readContracts, "StakingPool", "userStake", [address]);
   console.log("💸 balanceStaked:", balanceStaked);
 
   // ** 📟 Listen for broadcast events
