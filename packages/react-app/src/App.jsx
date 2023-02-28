@@ -1,7 +1,7 @@
 import WalletConnectProvider from "@walletconnect/web3-provider";
 //import Torus from "@toruslabs/torus-embed"
 import WalletLink from "walletlink";
-import { Alert, Button, Col, Menu, Row, List } from "antd";
+import { Input, Alert, Button, Col, Menu, Row, List } from "antd";
 import "antd/dist/antd.css";
 import React, { useCallback, useEffect, useState } from "react";
 import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
@@ -444,6 +444,11 @@ function App(props) {
   }, [loadWeb3Modal]);
 
   const [route, setRoute] = useState();
+  const [withdrawAmount, setWithdrawAmount] = useState({
+    valid: false,
+    value: "",
+  });
+
   useEffect(() => {
     setRoute(window.location.pathname);
   }, [setRoute]);
@@ -523,7 +528,7 @@ function App(props) {
 
             <div style={{ padding: 8 }}>
               <div>Total staked:</div>
-              <Balance balance={stakerContractBalance} fontSize={64} />/<Balance balance={threshold} fontSize={64} />
+              <Balance balance={stakerContractBalance} fontSize={64} />
             </div>
 
             <div style={{ padding: 8 }}>
@@ -531,22 +536,27 @@ function App(props) {
               <Balance balance={balanceStaked} fontSize={64} />
             </div>
 
-            <div style={{ padding: 8 }}>
-              <Button
-                type={"default"}
-                onClick={() => {
-                  tx(writeContracts.StakingPool.execute());
+            <div style={{ padding: 8, marginTop: 32, width: 300, margin: "auto" }}>
+              <Input
+                style={{ textAlign: "center" }}
+                placeholder={"amount of tokens to withdraw"}
+                value={balanceStaked}
+                onChange={e => {
+                  const newValue = e.target.value.startsWith(".") ? "0." : e.target.value;
+                  const withdrawAmount = {
+                    value: newValue,
+                    valid: /^\d*\.?\d+$/.test(newValue),
+                  };
+                  setWithdrawAmount(withdrawAmount);                 
                 }}
-              >
-                📡 Execute!
-              </Button>
+              />
             </div>
 
             <div style={{ padding: 8 }}>
               <Button
                 type={"default"}
                 onClick={() => {
-                  tx(writeContracts.StakingPool.withdraw());
+                  tx(writeContracts.StakingPool.unStake());
                 }}
               >
                 🏧 Withdraw
